@@ -1,4 +1,3 @@
-
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 {
   'use strict';
@@ -274,7 +273,9 @@
 
     announce() {
       //console.log('announce');
-      const event = new Event('updated');
+      const event = new Event('updated', {
+        bubbles: true
+      });
       this.element.dispatchEvent(event);
     }
   }   
@@ -303,10 +304,17 @@
 
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
 
-      thisCart.renderTotalsKeys = ['totalNumber', 'totalPrice', 'subtotalPrice', 'deliveryFee'];
-
-      for(let key of thisCart.renderTotalsKeys){
-        thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(select.cart[key]);
+      thisCart.renderTotalsKeys = [
+        'totalNumber',
+        'totalPrice',
+        'subtotalPrice',
+        'deliveryFee'
+      ];
+  
+      for (let key of thisCart.renderTotalsKeys) {
+        thisCart.dom[key] = thisCart.dom.wrapper.querySelectorAll(
+          select.cart[key]
+        );
       }
     }
 
@@ -319,6 +327,9 @@
         } else {
           thisCart.dom.wrapper.classList.add(classNames.cart.wrapperActive);
         }
+      });
+      thisCart.dom.productList.addEventListener('updated', function(){
+        thisCart.update();
       });
     }
 
@@ -375,7 +386,7 @@
   
       thisCartProduct.getElements(element);
       thisCartProduct.initAmountWidget();
-     // thisCartProduct.initActions();
+      // thisCartProduct.initActions();
     }
 
     getElements(element){
