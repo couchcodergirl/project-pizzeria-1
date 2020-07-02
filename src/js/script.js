@@ -308,6 +308,10 @@
 
       thisCart.dom.productList = thisCart.dom.wrapper.querySelector(select.cart.productList);
 
+      thisCart.dom.phone = thisCart.dom.wrapper.querySelector(select.cart.phone);
+
+      thisCart.dom.address = thisCart.dom.wrapper.querySelector(select.cart.address);
+
       thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
 
       thisCart.renderTotalsKeys = [
@@ -352,9 +356,18 @@
       const url = `${settings.db.url}/${settings.db.order}`;
 
       const payload = {
-        address: 'test',
+        phone: thisCart.dom.phone.value,
+        address: thisCart.dom.address.value,
         totalPrice: thisCart.totalPrice,
+        totalNumber: thisCart.totalNumber,
+        subtotalPrice: thisCart.subtotalPrice,
+        deliveryFee: thisCart.deliveryFee,
+        products: []
       };
+
+      for(let product of thisCart.products)
+        payload.products.push(product.getData());
+      
 
       const options = {
         method: 'POST',
@@ -371,8 +384,6 @@
           console.log('parsedResponse', parsedResponse);
         });
     }
-
-    
 
     add(menuProduct) {
 
@@ -488,8 +499,21 @@
         thisCartProduct.remove();
       });
     }
-  }
+    getData(){
+      const thisCartProduct = this;
 
+      const productData = {
+        OrderedItems: {
+          id: thisCartProduct.id,
+          amount: thisCartProduct.amount,
+          price: thisCartProduct.price,
+          priceSingle: thisCartProduct.priceSingle,
+          params: thisCartProduct.params
+        }
+      };
+      return productData;
+    }
+  }
   const app = {
     initMenu: function() {
       const thisApp = this;
